@@ -7,6 +7,17 @@
 @import "../../themes/manual-light.css";
 @import "../../themes/manual-dark.css";
 
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  src: url('../../public/fonts/Alibaba-PuHuiTi-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,body,.markdown-body code, .markdown-body pre, .markdown-body samp, .markdown-body tt {
+  font-family: 'AlibabaPuHuiTi', sans-serif !important;
+}
+
 html {
   color-scheme: light;
 }

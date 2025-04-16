@@ -484,6 +484,8 @@ services:
       PLUGIN_REMOTE_INSTALL_PORT: ${EXPOSE_PLUGIN_DEBUGGING_PORT:-5003}
       PLUGIN_MAX_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
       INNER_API_KEY_FOR_PLUGIN: ${PLUGIN_DIFY_INNER_API_KEY:-QaHbTe77CtuXmsfyhR7+vRjI/+XbV1AaFy691iy+kGDv2Jvy0/eAh8Y1}
+    ports:
+      - 5001:5001 
     depends_on:
       - db
       - redis
@@ -1107,6 +1109,30 @@ services:
     restart: always
     volumes:
       - ./volumes/unstructured:/app/data
+      
+  mermaid-flask-service:
+    build: ./mermaid-flask-service
+    container_name: mermaid-flask-service
+    restart: always
+    volumes:
+      - ./mermaid-flask-service/data:/app/data
+    ports:
+      - 5004:5002
+    networks:
+      - ssrf_proxy_network
+      - default
+   
+  markmap-flask-service:
+    build: ./markmap-flask-service
+    container_name: markmap-flask-service
+    restart: always
+    volumes:
+      - ./markmap-flask-service/data:/app/data
+    ports:
+      - 5005:5003
+    networks:
+      - ssrf_proxy_network
+      - default
 
 networks:
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.
