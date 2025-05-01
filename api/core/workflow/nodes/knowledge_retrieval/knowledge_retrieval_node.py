@@ -349,7 +349,9 @@ class KnowledgeRetrievalNode(LLMNode):
                         )
                     )
                 metadata_condition = MetadataCondition(
-                    logical_operator=node_data.metadata_filtering_conditions.logical_operator,  # type: ignore
+                    logical_operator=node_data.metadata_filtering_conditions.logical_operator
+                    if node_data.metadata_filtering_conditions
+                    else "or",  # type: ignore
                     conditions=conditions,
                 )
         elif node_data.metadata_filtering_mode == "manual":
@@ -380,7 +382,10 @@ class KnowledgeRetrievalNode(LLMNode):
         else:
             raise ValueError("Invalid metadata filtering mode")
         if filters:
-            if node_data.metadata_filtering_conditions.logical_operator == "and":  # type: ignore
+            if (
+                node_data.metadata_filtering_conditions
+                and node_data.metadata_filtering_conditions.logical_operator == "and"
+            ):  # type: ignore
                 document_query = document_query.filter(and_(*filters))
             else:
                 document_query = document_query.filter(or_(*filters))
@@ -502,7 +507,7 @@ class KnowledgeRetrievalNode(LLMNode):
                 filters.append(sqlalchemy_cast(Document.doc_metadata[metadata_name].astext, Integer) < value)
             case "after" | ">":
                 filters.append(sqlalchemy_cast(Document.doc_metadata[metadata_name].astext, Integer) > value)
-            case "≤" | ">=":
+            case "≤" | "<=":
                 filters.append(sqlalchemy_cast(Document.doc_metadata[metadata_name].astext, Integer) <= value)
             case "≥" | ">=":
                 filters.append(sqlalchemy_cast(Document.doc_metadata[metadata_name].astext, Integer) >= value)
